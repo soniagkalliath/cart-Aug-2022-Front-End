@@ -1,0 +1,98 @@
+<!-- when cart empty -->
+<div class="container mt-5 p-5" *ngIf="cartItems.length==0">
+  <div class="row text-center">
+    <div class="col">
+      <img
+        src="http://www.qamadness.com/wp-content/uploads/2018/08/ShoppingCart.gif"
+        alt="cart empty image"
+      />
+      <h3 class="mt-2">Your Cart is Empty</h3>
+      <a routerLink="/" class="btn btn-primary mt-2">Shop Now</a>
+    </div>
+  </div>
+</div>
+
+<!-- cart with contents -->
+<div class="container mt-5 p-5" *ngIf="cartItems.length!=0">
+  <div class="row">
+    <div class="col">
+      <table class="table border p-5">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 1st row change according to user -->
+          <tr *ngFor="let product of cartItems; let i=index">
+            <td>{{i+1}}</td>
+            <td>{{product.title}}</td>
+            <td>
+              <img width="100px" [src]="product.image" alt="no image" />
+            </td>
+            <td>
+             {{product.description}}
+            </td>
+            <td>${{product.price}}</td>
+            <td>
+              <i (click)="removeItem(product)" class="fa fa-trash text-danger"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="float: right;" class="m-3">
+        <button (click)="removeAllItems()" class="btn btn-danger">Empty Cart</button>
+
+        <a routerLink="/" class="btn btn-primary ms-2">Shop More</a>
+
+        <button class="btn btn-success ms-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Check out</button>
+
+        <b class="ms-1">Grand Total:$ {{grantTotal}} </b>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!--check out Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Check out Page</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h3>Delivary Address</h3>
+        <form class="border p-2">
+          <input placeholder="Customer Name" type="text" class="form-control mb-2">
+          <input placeholder="Customer Apartment / Flat / House Number" type="text" class="form-control mb-2">
+          <input placeholder="Customer pincode" type="text" class="form-control mb-2">
+          <input placeholder="Customer State" type="text" class="form-control mb-2">
+          <input placeholder="Customer Country" type="text" class="form-control mb-2">
+          <input placeholder="Customer Contact Number" type="text" class="form-control mb-2">
+        </form>
+        <div [ngSwitch]="grantTotal" class="mt-2 p-2">
+          <h4>Discounts</h4>
+         <span *ngSwitchCase="10.99" > <img (click)="discount5per($event.target)" width="150px" src="https://tse3.mm.bing.net/th?id=OIP.HjEx1c2jSL7XD1zziJROCgAAAA&pid=Api&P=0" alt="no coupon"></span >
+         <span *ngSwitchCase="100"> <img (click)="discount50per($event.target)" width="150px" src="http://www.pngmart.com/files/7/Coupon-PNG-Transparent-HD-Photo.png" alt="no coupon"></span>
+          <span *ngSwitchCase="50"><img (click)="discount30per($event.target)" width="150px" src="http://www.floridasalestax.com/images/blog/FL-Sales-Tax-on-Coupons.png" alt="no coupon"></span >
+          <span  *ngSwitchDefault><img (click)="discount3per($event.target)" width="170px" src="http://www.regionalsupplyblog.com/wp-content/uploads/2014/02/promo-20130306-185440.png" alt="no coupon"></span >
+        </div>
+      </div>
+      <div *ngIf="updatedTotal">
+        <h5 class="text-center" >New Total after Discount: <b class="text-danger "> {{updatedTotal}} </b> </h5>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" (click)="proceed()" class="btn btn-primary" >Proceed</button>
+      </div>
+    </div>
+  </div>
+</div>
